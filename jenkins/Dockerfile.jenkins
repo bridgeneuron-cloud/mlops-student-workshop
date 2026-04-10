@@ -12,9 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Some distributions expose the CLI as docker.io; normalize to `docker`.
 RUN if [ ! -x /usr/bin/docker ] && [ -x /usr/bin/docker.io ]; then \
       ln -s /usr/bin/docker.io /usr/bin/docker; \
-    fi \
- && command -v docker >/dev/null \
- && docker --version
+    fi
 
 # Allow the Jenkins user to talk to the mounted Docker socket.
 RUN usermod -aG docker jenkins || true
