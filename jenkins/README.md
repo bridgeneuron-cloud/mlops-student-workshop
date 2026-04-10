@@ -63,3 +63,14 @@ docker compose -f docker-compose.yml up --build -d
 - Cause: Job is configured as **Pipeline script** with old pasted content.
 - Fix: Edit job -> Configure -> set **Definition** to **Pipeline script from SCM** with `Jenkinsfile` path, then Save and Build again.
 
+### If pipeline fails with `docker: not found`
+- Cause: Jenkins container is running an older image that does not include Docker CLI.
+- Fix from `jenkins/` directory:
+```bash
+docker compose -f docker-compose.yml down
+docker compose -f docker-compose.yml build --no-cache
+docker compose -f docker-compose.yml up -d --force-recreate
+docker compose -f docker-compose.yml exec jenkins docker --version
+```
+- Re-run the Pipeline only after `docker --version` works inside the Jenkins container.
+
