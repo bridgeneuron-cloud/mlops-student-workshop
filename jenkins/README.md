@@ -67,10 +67,16 @@ docker compose -f docker-compose.yml up --build -d
 - Cause: Jenkins container is running an older image that does not include Docker CLI.
 - Fix from `jenkins/` directory:
 ```bash
-docker compose -f docker-compose.yml down
-docker compose -f docker-compose.yml build --no-cache
-docker compose -f docker-compose.yml up -d --force-recreate
-docker compose -f docker-compose.yml exec jenkins docker --version
+docker compose -p mlops-student-workshop -f docker-compose.yml down
+docker compose -p mlops-student-workshop -f docker-compose.yml build --no-cache
+docker compose -p mlops-student-workshop -f docker-compose.yml up -d --force-recreate
+docker compose -p mlops-student-workshop -f docker-compose.yml exec jenkins docker --version
 ```
 - Re-run the Pipeline only after `docker --version` works inside the Jenkins container.
+- If this still fails, remove stale images and rebuild once more:
+```bash
+docker image ls | grep jenkins
+docker compose -p mlops-student-workshop -f docker-compose.yml down --rmi all
+docker compose -p mlops-student-workshop -f docker-compose.yml up --build -d
+```
 

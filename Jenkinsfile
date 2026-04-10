@@ -4,6 +4,7 @@ pipeline {
   environment {
     // The workshop repo is mounted into the Jenkins container at /workspace.
     WORKDIR = "/workspace"
+    PATH = "/var/jenkins_home/.local/bin:/usr/local/bin:/usr/bin:/bin:${env.PATH}"
     BUILD_TAG = "mlops-workshop-student:jenkins-${env.BUILD_NUMBER}"
   }
 
@@ -22,6 +23,23 @@ pipeline {
           python3 --version
           python3 -m pip install -U pip --break-system-packages
           python3 -m pip install -r requirements.txt --break-system-packages
+        '''
+      }
+    }
+
+    stage('Docker preflight') {
+      steps {
+        sh '''
+          cd "${WORKDIR}"
+          if ! command -v docker >/dev/null 2>&1; then
+            echo "[preflight] docker CLI not found in Jenkins container PATH=${PATH}"
+            echo "[preflight] Rebuild Jenkins container from jenkins/ directory:"
+            echo "  docker compose -p mlops-student-workshop -f docker-compose.yml down"
+            echo "  docker compose -p mlops-student-workshop -f docker-compose.yml build --no-cache"
+            echo "  docker compose -p mlops-student-workshop -f docker-compose.yml up -d --force-recreate"
+            exit 127
+          fi
+          docker --version
         '''
       }
     }
