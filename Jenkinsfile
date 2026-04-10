@@ -4,7 +4,6 @@ pipeline {
   environment {
     // The workshop repo is mounted into the Jenkins container at /workspace.
     WORKDIR = "/workspace"
-    VENV_DIR = "/workspace/.venv"
     BUILD_TAG = "mlops-workshop-student:jenkins-${env.BUILD_NUMBER}"
   }
 
@@ -21,10 +20,8 @@ pipeline {
         sh '''
           cd "${WORKDIR}"
           python3 --version
-          python3 -m venv "${VENV_DIR}"
-          . "${VENV_DIR}/bin/activate"
-          pip install -U pip
-          pip install -r requirements.txt
+          python3 -m pip install -U pip --break-system-packages
+          python3 -m pip install -r requirements.txt --break-system-packages
         '''
       }
     }
@@ -33,7 +30,6 @@ pipeline {
       steps {
         sh '''
           cd "${WORKDIR}"
-          . "${VENV_DIR}/bin/activate"
           python3 scripts/generate_synthetic_data.py --rows 5000 --seed 42 --out data/raw.csv
         '''
       }
@@ -43,7 +39,6 @@ pipeline {
       steps {
         sh '''
           cd "${WORKDIR}"
-          . "${VENV_DIR}/bin/activate"
           python3 src/data_prep.py --input data/raw.csv --output data/clean.csv
         '''
       }
@@ -53,7 +48,6 @@ pipeline {
       steps {
         sh '''
           cd "${WORKDIR}"
-          . "${VENV_DIR}/bin/activate"
           rm -rf artifacts/*
           python3 src/train.py --train data/clean.csv --out artifacts --seed 42
         '''
@@ -64,7 +58,6 @@ pipeline {
       steps {
         sh '''
           cd "${WORKDIR}"
-          . "${VENV_DIR}/bin/activate"
           pytest -q
         '''
       }
