@@ -1,11 +1,8 @@
 pipeline {
   agent any
-  options {
-    timestamps()
-  }
 
   environment {
-    # The workshop repo is mounted into the Jenkins container at /workspace.
+    // The workshop repo is mounted into the Jenkins container at /workspace.
     WORKDIR = "/workspace"
     BUILD_TAG = "mlops-workshop-student:jenkins-${env.BUILD_NUMBER}"
   }
