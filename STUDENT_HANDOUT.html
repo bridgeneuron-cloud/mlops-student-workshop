@@ -213,7 +213,11 @@ curl -s http://localhost:8000/version</pre>
       <span>Completed</span>
     </label>
   </div>
-  <p class='p'>Watch Jenkins pipeline output in the UI:</p><ul class='list'><li>Expected stages: generate -&gt; prep -&gt; train -&gt; test -&gt; docker build -&gt; deploy.</li></ul>
+  <p class='p'><strong>Full setup:</strong> follow <code>jenkins/README.md</code> in this repo.</p>
+  <p class='p'><strong>Create the Pipeline job:</strong> Pipeline script from SCM → Git → <code>https://github.com/bridgeneuron-cloud/mlops-student-workshop.git</code> → Branch <code>*/main</code> → Script Path <code>Jenkinsfile</code> → Credentials (Username with password = GitHub username + PAT).</p>
+  <p class='p'><strong>Expected stages (full pipeline):</strong> Setup Python + Dependencies → Generate synthetic data → Data prep → Train → Unit tests → Docker preflight → Build Docker image → Deploy to local production.</p>
+  <p class='p'><strong>If Docker fails in Jenkins:</strong> set <code>SKIP_DOCKER=true</code> on the job to stop after tests; on your host run <code>./scripts/pipeline_local_deploy.sh</code>.</p>
+  <p class='p'><strong>After deploy:</strong> <code>curl -s http://localhost:8000/health</code> and <code>curl -s http://localhost:8000/version</code>.</p>
 </section></div>
     </main>
   </div>

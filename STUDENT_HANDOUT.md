@@ -67,6 +67,14 @@ curl -s http://localhost:8000/version
 The `model_version` should change after redeploy.
 
 ### 7) Jenkins (if instructor starts local Jenkins)
-Watch Jenkins pipeline output in the UI:
-- Expected stages: generate -> prep -> train -> test -> docker build -> deploy.
+
+**Full setup (start Jenkins, job config, troubleshooting):** follow `jenkins/README.md` in this repo.
+
+**Create the Pipeline job:** **Pipeline script from SCM** → **Git** → Repository URL `https://github.com/bridgeneuron-cloud/mlops-student-workshop.git` → Branch `*/main` → Script Path `Jenkinsfile` → add **Credentials** (Jenkins: **Username with password** = GitHub username + personal access token).
+
+**Expected stages (full pipeline):** Setup Python + Dependencies → Generate synthetic data → Data prep → Train → Unit tests → Docker preflight → Build Docker image → Deploy to local production.
+
+**If Docker steps fail inside Jenkins:** set job parameter / environment **`SKIP_DOCKER=true`** so the run **stops after tests** (ML path still validated). On your host, deploy with `./scripts/pipeline_local_deploy.sh` (or `docker build` + `./scripts/deploy.sh <tag>` as in `jenkins/README.md`).
+
+**After a successful deploy:** `curl -s http://localhost:8000/health` and `curl -s http://localhost:8000/version`.
 

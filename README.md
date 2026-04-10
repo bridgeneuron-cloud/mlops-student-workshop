@@ -71,10 +71,10 @@ curl -s http://localhost:8000/version
 
 ### Jenkins (local) - what to show in class
 This workshop includes:
-- `jenkins/Dockerfile.jenkins` (Jenkins + Python + Docker CLI)
-- `Jenkinsfile` that runs the exact stages (generate, clean, train, test, build image, deploy)
+- `jenkins/Dockerfile.jenkins` (Jenkins + Python + build tools + **static Docker CLI** for reliable `docker build` against the mounted socket)
+- `Jenkinsfile` with the same ML lifecycle as the lab, optional **`SKIP_DOCKER=true`** to pass CI when only the ML stages are needed (deploy on the host instead)
 
-Jenkins startup is done via Docker Compose instructions in `jenkins/README.md`.
+**Setup, HTTPS + PAT, branch `main`, compose container name, and troubleshooting** are documented in `jenkins/README.md`. Student-facing steps are also summarized in `STUDENT_HANDOUT.md` section 7.
 
 ### Data Security points (talk track)
 Use the following “checkpoint” moments during the demo:
