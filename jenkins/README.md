@@ -71,9 +71,10 @@ docker compose -f docker-compose.yml down --remove-orphans --volumes --rmi all
 docker compose -f docker-compose.yml build --no-cache --progress=plain
 docker compose -f docker-compose.yml up -d --force-recreate
 docker compose -f docker-compose.yml ps
-docker exec -it mlops-student-workshop-jenkins sh -lc 'which docker && docker --version'
+docker exec -it mlops-student-workshop-jenkins sh -lc 'which docker && docker --version && ls -l /var/run/docker.sock'
 ```
 - Re-run the Pipeline only after `docker --version` works inside the Jenkins container.
+- If `docker` is still missing, the container is not rebuilt from latest Dockerfile; repeat the full rebuild commands above.
 - If this still fails, remove stale images and rebuild once more:
 ```bash
 docker image ls | grep jenkins
