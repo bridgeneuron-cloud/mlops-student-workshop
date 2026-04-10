@@ -1,7 +1,10 @@
 version: "3.9"
+name: mlops-student-workshop
 
 services:
   jenkins:
+    image: mlops-student-workshop-jenkins:local
+    container_name: mlops-student-workshop-jenkins
     build:
       context: .
       dockerfile: Dockerfile.jenkins
