@@ -58,7 +58,7 @@ pipeline {
       steps {
         sh '''
           cd "${WORKDIR}"
-          pytest -q
+          python3 -m pytest -q
         '''
       }
     }
