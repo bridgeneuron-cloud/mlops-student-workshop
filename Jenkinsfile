@@ -6,12 +6,13 @@ pipeline {
     WORKDIR = "/workspace"
     PATH = "/var/jenkins_home/.local/bin:/usr/local/bin:/usr/bin:/bin:${env.PATH}"
     BUILD_TAG = "mlops-workshop-student:jenkins-${env.BUILD_NUMBER}"
+    // Set SKIP_DOCKER=true in the Jenkins job (e.g. Parameters / Environment) to pass the
+    // pipeline without image build/deploy when Docker-in-Jenkins is not available.
   }
 
   stages {
     stage('Checkout') {
       steps {
-        // Default Jenkins SCM checkout is handled by the job configuration.
         echo "Checked out by Jenkins SCM."
       }
     }
@@ -23,23 +24,6 @@ pipeline {
           python3 --version
           python3 -m pip install -U pip --break-system-packages
           python3 -m pip install -r requirements.txt --break-system-packages
-        '''
-      }
-    }
-
-    stage('Docker preflight') {
-      steps {
-        sh '''
-          cd "${WORKDIR}"
-          if ! command -v docker >/dev/null 2>&1; then
-            echo "[preflight] docker CLI not found in Jenkins container PATH=${PATH}"
-            echo "[preflight] Rebuild Jenkins container from jenkins/ directory:"
-            echo "  docker compose -p mlops-student-workshop -f docker-compose.yml down"
-            echo "  docker compose -p mlops-student-workshop -f docker-compose.yml build --no-cache"
-            echo "  docker compose -p mlops-student-workshop -f docker-compose.yml up -d --force-recreate"
-            exit 127
-          fi
-          docker --version
         '''
       }
     }
@@ -81,7 +65,28 @@ pipeline {
       }
     }
 
+    stage('Docker preflight') {
+      when {
+        expression { return env.SKIP_DOCKER != 'true' }
+      }
+      steps {
+        sh '''
+          cd "${WORKDIR}"
+          if ! command -v docker >/dev/null 2>&1; then
+            echo "[preflight] docker CLI not found. Options:"
+            echo "  1) Rebuild Jenkins image from jenkins/Dockerfile.jenkins (static docker CLI is installed there)."
+            echo "  2) Set job env SKIP_DOCKER=true to finish pipeline after tests (no image build/deploy)."
+            exit 127
+          fi
+          docker --version
+        '''
+      }
+    }
+
     stage('Build Docker image') {
+      when {
+        expression { return env.SKIP_DOCKER != 'true' }
+      }
       steps {
         sh '''
           cd "${WORKDIR}"
@@ -91,6 +96,9 @@ pipeline {
     }
 
     stage('Deploy to local production') {
+      when {
+        expression { return env.SKIP_DOCKER != 'true' }
+      }
       steps {
         sh '''
           cd "${WORKDIR}"
@@ -99,6 +107,14 @@ pipeline {
         '''
       }
     }
+
+    stage('Docker skipped (manual deploy)') {
+      when {
+        expression { return env.SKIP_DOCKER == 'true' }
+      }
+      steps {
+        echo 'SKIP_DOCKER=true: ML stages completed. On the host run: ./scripts/pipeline_local_deploy.sh or docker build + ./scripts/deploy.sh <tag>'
+      }
+    }
   }
 }
-

@@ -39,6 +39,23 @@ Why this is recommended:
 ### Run the job
 - Click **Build Now**
 
+### Alternative: pipeline without Docker in Jenkins (green build for ML only)
+If `docker` never appears inside the Jenkins container, you can still validate the full ML path in CI:
+
+1. Job -> **Configure** -> **General** -> **Environment** (or **Build Environment**): add **Environment variables**
+   - Name: `SKIP_DOCKER`
+   - Value: `true`
+2. Save and **Build Now**.
+
+The job will run: generate data → prep → train → tests, then skip image build and deploy. Run deployment on the host instead:
+
+```bash
+cd /path/to/mlops-student-workshop
+./scripts/pipeline_local_deploy.sh
+```
+
+The Jenkins image installs the **official static Docker CLI** (`Dockerfile.jenkins`); rebuild with `--no-cache` so Docker stages work when `SKIP_DOCKER` is not set.
+
 Expected behavior:
 - The pipeline runs data generation -> data security cleaning -> training -> tests -> docker build -> deploys to local container named `ml-prod`.
 - After deployment, your instructor can verify with:
