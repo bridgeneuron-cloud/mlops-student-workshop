@@ -5,7 +5,7 @@
 
 ### Start Jenkins
 From this directory:
-`mlops-workshop/jenkins`
+`mlops-student-workshop/jenkins`
 ```bash
 docker compose -f docker-compose.yml up --build -d
 ```
@@ -13,14 +13,21 @@ docker compose -f docker-compose.yml up --build -d
 Open Jenkins:
 - http://localhost:8080
 
-### Create the Pipeline job (quick manual setup)
+### Create the Pipeline job (recommended setup)
 1. Click **New Item**
- 2. Name it: `mlops-workshop-student`
+2. Name it: `mlops-workshop-student`
 3. Select **Pipeline**
 4. Configure:
-   - **Definition**: `Pipeline script`
-   - Paste the contents of the workshop `Jenkinsfile` (from `../Jenkinsfile`) into the script box
+   - **Definition**: `Pipeline script from SCM`
+   - **SCM**: `Git`
+   - **Repository URL**: `git@github.com:bridgeneuron-cloud/mlops-student-workshop.git`
+   - **Branch Specifier**: `*/main`
+   - **Script Path**: `Jenkinsfile`
 5. Save
+
+Why this is recommended:
+- Jenkins always executes the latest committed `Jenkinsfile`.
+- Avoids stale pasted scripts (for example old `pip3 install` commands that fail with PEP 668).
 
 ### Run the job
 - Click **Build Now**
@@ -43,4 +50,9 @@ docker compose -f docker-compose.yml down -v
 docker compose -f docker-compose.yml up --build -d
 ```
 - Then refresh `http://localhost:8080` and create a new item again. You should see **Pipeline**.
+
+### If console still shows old commands
+- Symptom: You still see outdated lines (for example `pip3 install -U pip`) even after repo updates.
+- Cause: Job is configured as **Pipeline script** with old pasted content.
+- Fix: Edit job -> Configure -> set **Definition** to **Pipeline script from SCM** with `Jenkinsfile` path, then Save and Build again.
 
