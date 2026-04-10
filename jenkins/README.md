@@ -20,14 +20,21 @@ Open Jenkins:
 4. Configure:
    - **Definition**: `Pipeline script from SCM`
    - **SCM**: `Git`
-   - **Repository URL**: `git@github.com:bridgeneuron-cloud/mlops-student-workshop.git`
+   - **Repository URL**: `https://github.com/bridgeneuron-cloud/mlops-student-workshop.git`
    - **Branch Specifier**: `*/main`
    - **Script Path**: `Jenkinsfile`
+   - **Credentials**:
+     - Jenkins -> Manage Jenkins -> Credentials -> Add Credentials
+     - **Kind**: `Username with password`
+     - **Username**: your GitHub username
+     - **Password**: your GitHub PAT token
+     - Select this credential in the job SCM section
 5. Save
 
 Why this is recommended:
 - Jenkins always executes the latest committed `Jenkinsfile`.
 - Avoids stale pasted scripts (for example old `pip3 install` commands that fail with PEP 668).
+- Avoids SSH host key verification failures on fresh Jenkins containers.
 
 ### Run the job
 - Click **Build Now**
