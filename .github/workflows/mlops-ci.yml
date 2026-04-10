@@ -1,0 +1,58 @@
+name: mlops-workshop-ci
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  mlops:
+    runs-on: ubuntu-latest
+    env:
+      ROWS: "5000"
+      SEED: "42"
+      DEPLOY_LOCAL: "false"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install -U pip
+          pip install -r requirements.txt
+
+      - name: Generate synthetic data
+        run: |
+          python scripts/generate_synthetic_data.py --rows "${ROWS}" --seed "${SEED}" --out data/raw.csv
+
+      - name: Data prep (security + cleaning)
+        run: |
+          python src/data_prep.py --input data/raw.csv --output data/clean.csv
+
+      - name: Train model
+        run: |
+          rm -rf artifacts/*
+          python src/train.py --train data/clean.csv --out artifacts --seed "${SEED}"
+
+      - name: Unit tests
+        run: |
+          pytest -q
+
+      - name: Docker build
+        run: |
+          TAG="mlops-workshop:github-${{ github.run_id }}"
+          docker build -t "${TAG}" .
+          echo "IMAGE_TAG=${TAG}" >> $GITHUB_ENV
+
+      - name: Deploy to local production (only for local runners/act)
+        if: env.DEPLOY_LOCAL == 'true'
+        run: |
+          chmod +x scripts/deploy.sh
+          ./scripts/deploy.sh "${IMAGE_TAG}"
+

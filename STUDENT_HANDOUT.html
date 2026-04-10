@@ -1,0 +1,260 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student Handout (Hands-on MLOps with Local CI/CD) - Workshop</title>
+<style>
+:root{--bg:#0b1220;--card:rgba(255,255,255,.03);--muted:#9aa4b2;--text:#e8edf5;--border:rgba(255,255,255,.10);--accent:#7c5cff;--accent2:#22c55e;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.45;background:linear-gradient(180deg,#0b1220 0%,#0a1020 50%,#070b14 100%);color:var(--text)}
+a{color:#a9b6ff;text-decoration:none}
+.container{display:grid;grid-template-columns:300px 1fr;gap:18px;max-width:1240px;margin:0 auto;padding:18px}
+@media(max-width:980px){.container{grid-template-columns:1fr}.sidebar{position:relative;top:auto;height:auto}}
+.sidebar{position:sticky;top:14px;height:calc(100vh - 28px);overflow:auto;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:14px}
+.badge{display:inline-flex;align-items:center;gap:10px;background:rgba(124,92,255,.16);border:1px solid rgba(124,92,255,.35);padding:10px 12px;border-radius:999px;font-weight:800;font-size:13px}
+.small{color:var(--muted);font-size:13px}
+.hero{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:18px;padding:18px;overflow:hidden;position:relative}
+.hero:before{content:'';position:absolute;inset:-200px -180px auto auto;width:360px;height:360px;background:radial-gradient(circle at 25% 25%, rgba(124,92,255,.4), rgba(124,92,255,0) 60%);transform:rotate(12deg)}
+.hero h1{margin:0 0 8px 0;font-size:26px;letter-spacing:-.02em;position:relative}
+.hero p{margin:0;color:var(--muted);position:relative}
+.heroRow{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;position:relative}
+.btn{border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);padding:9px 12px;border-radius:12px;cursor:pointer;font-weight:800}
+.btn:hover{background:rgba(255,255,255,.07)}
+.search{margin-top:12px;position:relative;display:flex;gap:10px;align-items:center}
+.search input{flex:1;min-width:200px;background:#0c162b;border:1px solid var(--border);border-radius:12px;color:var(--text);padding:10px 12px;outline:none}
+.search input:focus{border-color:rgba(124,92,255,.55);box-shadow:0 0 0 3px rgba(124,92,255,.18)}
+.toc{margin-top:12px}
+.toc a{display:block;padding:8px 10px;border-radius:12px;border:1px solid transparent;color:var(--muted)}
+.toc a:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.toc a.active{background:rgba(124,92,255,.12);border-color:rgba(124,92,255,.30);color:var(--text)}
+.main{min-width:0}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:14px}
+.cardHead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.cardTitle{font-weight:900;font-size:18px}
+.doneWrap{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-weight:700;font-size:13px}
+.doneWrap input{width:18px;height:18px}
+.p{margin:0 0 10px 0;color:rgba(232,237,245,.95)}
+.list{margin:0;padding-left:18px}
+.list li{margin:6px 0}
+.stepGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media(max-width:900px){.stepGrid{grid-template-columns:1fr}}
+.step{border:1px solid var(--border);background:rgba(255,255,255,.03);border-radius:14px;padding:12px;display:flex;gap:10px;align-items:flex-start}
+.step .num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:12px;background:rgba(124,92,255,.18);border:1px solid rgba(124,92,255,.35);font-weight:1000}
+.step .t{font-weight:750}
+.codeCard{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:#0b152a;margin-top:10px}
+.codeHead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border)}
+.codeLang{color:var(--muted);font-size:13px;font-weight:800}
+.copyBtn{background:rgba(124,92,255,.14);border:1px solid rgba(124,92,255,.35);color:#d8d2ff;border-radius:12px;padding:8px 10px;font-weight:1000;cursor:pointer}
+.copyBtn:hover{background:rgba(124,92,255,.22)}
+pre{margin:0;padding:12px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;white-space:pre-wrap;word-break:break-word;color:#e8edf5;font-size:13px}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <div class="badge">Secure MLOps Workshop</div>
+      <div class="small" style="margin-top:10px">On this page</div>
+      <nav class="toc" id="toc"><a href='#goal' data-toc='goal'>Goal</a><a href='#0-setup-host' data-toc='0-setup-host'>0) Setup (host)</a><a href='#1-generate-synthetic-data' data-toc='1-generate-synthetic-data'>1) Generate synthetic data</a><a href='#2-data-cleaning-data-security' data-toc='2-data-cleaning-data-security'>2) Data cleaning + data security</a><a href='#3-train-model-create-artifacts' data-toc='3-train-model-create-artifacts'>3) Train model + create artifacts</a><a href='#4-deploy-to-local-production-container' data-toc='4-deploy-to-local-production-container'>4) Deploy to local “production” container</a><a href='#5-prediction-real-time-demo' data-toc='5-prediction-real-time-demo'>5) Prediction (real-time demo)</a><a href='#6-ci-cd-practice-github-copy-simulation' data-toc='6-ci-cd-practice-github-copy-simulation'>6) CI/CD practice (GitHub copy simulation)</a><a href='#7-jenkins-if-instructor-starts-local-jenkins' data-toc='7-jenkins-if-instructor-starts-local-jenkins'>7) Jenkins (if instructor starts local Jenkins)</a></nav>
+      <hr style="border:none;border-top:1px solid var(--border);margin:14px 0"/>
+      <div class="small">Tip: Use browser search (<span style="font-family:ui-monospace">Ctrl+F</span>) or the built-in filter.</div>
+    </aside>
+
+    <main class="main">
+      <div class="hero">
+        <h1>Student Handout (Hands-on MLOps with Local CI/CD)</h1>
+        <p>Cards, section navigation, and one-click command copy. Check items as you complete the steps. All checkpoints use <strong>data security</strong>.</p>
+        <div class="heroRow">
+          <button class="btn" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})">Top</button>
+          <button class="btn" type="button" onclick="document.getElementById('searchBox').focus()">Search</button>
+        </div>
+        <div class="search">
+          <input id="searchBox" type="text" placeholder="Filter page content by keyword..." oninput="filterText()" />
+        </div>
+      </div>
+
+      <div id="cards"><section id='goal' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>Goal</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='goal' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <p class='p'>Build and deploy an ML model end-to-end:&lt;br&gt;data generation -&gt; data security cleaning -&gt; train -&gt; real-time API -&gt; CI/CD -&gt; production deploy.</p>
+</section><section id='0-setup-host' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>0) Setup (host)</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='0-setup-host' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>bash</div>
+  <button class='copyBtn' type='button' data-copy-target='code_5199531647710367486'>Copy</button>
+</div>
+<pre id='code_5199531647710367486'>cd &quot;mlops-workshop-student&quot;
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -U pip
+pip install -r requirements.txt</pre>
+</div>
+</section><section id='1-generate-synthetic-data' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>1) Generate synthetic data</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='1-generate-synthetic-data' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>bash</div>
+  <button class='copyBtn' type='button' data-copy-target='code_4726668174490517947'>Copy</button>
+</div>
+<pre id='code_4726668174490517947'>python3 scripts/generate_synthetic_data.py --rows 5000 --seed 42 --out data/raw.csv</pre>
+</div><p class='p'>Data security note:</p><ul class='list'><li><code>data/raw.csv</code> contains PII columns: <code>email</code>, <code>phone</code>, <code>customer_id</code>.</li></ul>
+</section><section id='2-data-cleaning-data-security' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>2) Data cleaning + data security</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='2-data-cleaning-data-security' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>bash</div>
+  <button class='copyBtn' type='button' data-copy-target='code_8856587462296538122'>Copy</button>
+</div>
+<pre id='code_8856587462296538122'>python3 src/data_prep.py --input data/raw.csv --output data/clean.csv</pre>
+</div><p class='p'>Expected outcome:</p><ul class='list'><li><code>src/data_prep.py</code> drops PII columns before training.</li></ul>
+</section><section id='3-train-model-create-artifacts' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>3) Train model + create artifacts</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='3-train-model-create-artifacts' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>bash</div>
+  <button class='copyBtn' type='button' data-copy-target='code_2754864277234072622'>Copy</button>
+</div>
+<pre id='code_2754864277234072622'>rm -rf artifacts/*
+python3 src/train.py --train data/clean.csv --out artifacts --seed 42</pre>
+</div><p class='p'>You should see:</p><ul class='list'><li><code>artifacts/model.joblib</code></li><li><code>artifacts/metrics.json</code></li><li><code>artifacts/metadata.json</code></li></ul>
+</section><section id='4-deploy-to-local-production-container' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>4) Deploy to local “production” container</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='4-deploy-to-local-production-container' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>bash</div>
+  <button class='copyBtn' type='button' data-copy-target='code_5932273820607319977'>Copy</button>
+</div>
+<pre id='code_5932273820607319977'>./scripts/pipeline_local_deploy.sh</pre>
+</div><p class='p'>Verify:</p><div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>bash</div>
+  <button class='copyBtn' type='button' data-copy-target='code_6758600886810592635'>Copy</button>
+</div>
+<pre id='code_6758600886810592635'>curl -s http://localhost:8000/health
+curl -s http://localhost:8000/version</pre>
+</div>
+</section><section id='5-prediction-real-time-demo' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>5) Prediction (real-time demo)</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='5-prediction-real-time-demo' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>bash</div>
+  <button class='copyBtn' type='button' data-copy-target='code_7392470860162924342'>Copy</button>
+</div>
+<pre id='code_7392470860162924342'>curl -s -X POST http://localhost:8000/predict \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#x27;{&quot;age&quot;:42,&quot;country&quot;:&quot;US&quot;,&quot;device_type&quot;:&quot;mobile&quot;,&quot;transaction_amount&quot;:250.5,&quot;hour_of_day&quot;:13,&quot;num_prev_txns&quot;:3,&quot;is_international&quot;:0}&#x27;</pre>
+</div>
+</section><section id='6-ci-cd-practice-github-copy-simulation' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>6) CI/CD practice (GitHub copy simulation)</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='6-ci-cd-practice-github-copy-simulation' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <p class='p'>Run the GitHub-style pipeline locally:</p><div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>bash</div>
+  <button class='copyBtn' type='button' data-copy-target='code_7801546268790148602'>Copy</button>
+</div>
+<pre id='code_7801546268790148602'>chmod +x scripts/github_pipeline_sim.sh
+./scripts/github_pipeline_sim.sh</pre>
+</div><p class='p'>Then re-check:</p><div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>bash</div>
+  <button class='copyBtn' type='button' data-copy-target='code_6552943681336439496'>Copy</button>
+</div>
+<pre id='code_6552943681336439496'>curl -s http://localhost:8000/version</pre>
+</div><p class='p'>The <code>model_version</code> should change after redeploy.</p>
+</section><section id='7-jenkins-if-instructor-starts-local-jenkins' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>7) Jenkins (if instructor starts local Jenkins)</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='7-jenkins-if-instructor-starts-local-jenkins' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <p class='p'>Watch Jenkins pipeline output in the UI:</p><ul class='list'><li>Expected stages: generate -&gt; prep -&gt; train -&gt; test -&gt; docker build -&gt; deploy.</li></ul>
+</section></div>
+    </main>
+  </div>
+
+<script>
+  function filterText(){
+    const q=(document.getElementById('searchBox').value||'').trim().toLowerCase();
+    const cards=document.querySelectorAll('section.card');
+    cards.forEach(card=>{
+      const t=(card.innerText||'').toLowerCase();
+      card.style.display=(!q || t.includes(q)) ? '' : 'none';
+    });
+  }
+
+  // Copy code blocks
+  document.querySelectorAll('.copyBtn').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id=btn.getAttribute('data-copy-target');
+      const pre=document.getElementById(id);
+      const txt=pre ? pre.innerText : '';
+      try{
+        await navigator.clipboard.writeText(txt);
+        const old=btn.textContent;
+        btn.textContent='Copied';
+        setTimeout(()=>btn.textContent=old, 900);
+      }catch(e){
+        alert('Copy failed. Select and copy manually.');
+      }
+    });
+  });
+
+  // Persist “Completed” checkboxes
+  const KEY_PREFIX='done_';
+  document.querySelectorAll('.doneBox').forEach(cb=>{
+    const sec=cb.getAttribute('data-sec');
+    const saved=localStorage.getItem(KEY_PREFIX+sec);
+    if(saved==='1') cb.checked=true;
+    cb.addEventListener('change', ()=>{
+      localStorage.setItem(KEY_PREFIX+sec, cb.checked ? '1' : '0');
+    });
+  });
+
+</script>
+</body></html>
