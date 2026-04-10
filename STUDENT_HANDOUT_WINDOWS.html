@@ -1,0 +1,351 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student Handout — Windows (Hands-on MLOps with Local CI/CD)</title>
+<style>
+:root{--bg:#0b1220;--card:rgba(255,255,255,.03);--muted:#9aa4b2;--text:#e8edf5;--border:rgba(255,255,255,.10);--accent:#7c5cff;--accent2:#22c55e;--win:#38bdf8;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.45;background:linear-gradient(180deg,#0b1220 0%,#0a1020 50%,#070b14 100%);color:var(--text)}
+a{color:#a9b6ff;text-decoration:none}
+.container{display:grid;grid-template-columns:300px 1fr;gap:18px;max-width:1240px;margin:0 auto;padding:18px}
+@media(max-width:980px){.container{grid-template-columns:1fr}.sidebar{position:relative;top:auto;height:auto}}
+.sidebar{position:sticky;top:14px;height:calc(100vh - 28px);overflow:auto;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:14px}
+.badge{display:inline-flex;align-items:center;gap:10px;background:rgba(56,189,248,.14);border:1px solid rgba(56,189,248,.35);padding:10px 12px;border-radius:999px;font-weight:800;font-size:13px}
+.small{color:var(--muted);font-size:13px}
+.hero{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:18px;padding:18px;overflow:hidden;position:relative}
+.hero:before{content:'';position:absolute;inset:-200px -180px auto auto;width:360px;height:360px;background:radial-gradient(circle at 25% 25%, rgba(56,189,248,.35), rgba(56,189,248,0) 60%);transform:rotate(12deg)}
+.hero h1{margin:0 0 8px 0;font-size:26px;letter-spacing:-.02em;position:relative}
+.hero p{margin:0;color:var(--muted);position:relative}
+.heroRow{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;position:relative}
+.btn{border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);padding:9px 12px;border-radius:12px;cursor:pointer;font-weight:800}
+.btn:hover{background:rgba(255,255,255,.07)}
+.search{margin-top:12px;position:relative;display:flex;gap:10px;align-items:center}
+.search input{flex:1;min-width:200px;background:#0c162b;border:1px solid var(--border);border-radius:12px;color:var(--text);padding:10px 12px;outline:none}
+.search input:focus{border-color:rgba(56,189,248,.55);box-shadow:0 0 0 3px rgba(56,189,248,.18)}
+.toc{margin-top:12px}
+.toc a{display:block;padding:8px 10px;border-radius:12px;border:1px solid transparent;color:var(--muted)}
+.toc a:hover{background:rgba(255,255,255,.04);color:var(--text)}
+.toc a.active{background:rgba(56,189,248,.12);border-color:rgba(56,189,248,.30);color:var(--text)}
+.main{min-width:0}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:14px}
+.cardHead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.cardTitle{font-weight:900;font-size:18px}
+.doneWrap{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-weight:700;font-size:13px}
+.doneWrap input{width:18px;height:18px}
+.p{margin:0 0 10px 0;color:rgba(232,237,245,.95)}
+.list{margin:0;padding-left:18px}
+.list li{margin:6px 0}
+.callout{border-left:3px solid var(--win);padding:10px 12px;background:rgba(56,189,248,.08);border-radius:0 12px 12px 0;margin:10px 0;font-size:14px}
+.codeCard{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:#0b152a;margin-top:10px}
+.codeHead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border)}
+.codeLang{color:var(--muted);font-size:13px;font-weight:800}
+.copyBtn{background:rgba(56,189,248,.14);border:1px solid rgba(56,189,248,.35);color:#bae6fd;border-radius:12px;padding:8px 10px;font-weight:1000;cursor:pointer}
+.copyBtn:hover{background:rgba(56,189,248,.22)}
+pre{margin:0;padding:12px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;white-space:pre-wrap;word-break:break-word;color:#e8edf5;font-size:13px}
+</style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <div class="badge">Windows · Secure MLOps Workshop</div>
+      <div class="small" style="margin-top:10px">On this page</div>
+      <nav class="toc" id="toc"><a href='#goal' data-toc='goal'>Goal</a><a href='#windows-prerequisites' data-toc='windows-prerequisites'>Windows prerequisites</a><a href='#0-setup-host' data-toc='0-setup-host'>0) Setup (host)</a><a href='#1-generate-synthetic-data' data-toc='1-generate-synthetic-data'>1) Generate synthetic data</a><a href='#2-data-cleaning-data-security' data-toc='2-data-cleaning-data-security'>2) Data cleaning + data security</a><a href='#3-train-model-create-artifacts' data-toc='3-train-model-create-artifacts'>3) Train model + create artifacts</a><a href='#4-deploy-to-local-production-container' data-toc='4-deploy-to-local-production-container'>4) Deploy to local “production” container</a><a href='#5-prediction-real-time-demo' data-toc='5-prediction-real-time-demo'>5) Prediction (real-time demo)</a><a href='#6-ci-cd-practice-github-copy-simulation' data-toc='6-ci-cd-practice-github-copy-simulation'>6) CI/CD practice (GitHub copy simulation)</a><a href='#7-jenkins-if-instructor-starts-local-jenkins' data-toc='7-jenkins-if-instructor-starts-local-jenkins'>7) Jenkins (if instructor starts local Jenkins)</a></nav>
+      <hr style="border:none;border-top:1px solid var(--border);margin:14px 0"/>
+      <div class="small">Tip: Use browser search (<span style="font-family:ui-monospace">Ctrl+F</span>) or the filter box. Shell scripts (<code>.sh</code>) — use <strong>Git Bash</strong> or <strong>WSL</strong>.</div>
+    </aside>
+
+    <main class="main">
+      <div class="hero">
+        <h1>Student Handout — Windows (Hands-on MLOps with Local CI/CD)</h1>
+        <p>PowerShell for Python and Docker where possible; Git Bash for bundled <code>.sh</code> scripts. Same lab as the Linux/macOS handout, adapted for Windows paths and shells.</p>
+        <div class="heroRow">
+          <button class="btn" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})">Top</button>
+          <button class="btn" type="button" onclick="document.getElementById('searchBox').focus()">Search</button>
+        </div>
+        <div class="search">
+          <input id="searchBox" type="text" placeholder="Filter page content by keyword..." oninput="filterText()" />
+        </div>
+      </div>
+
+      <div id="cards">
+<section id='goal' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>Goal</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='goal-win' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <p class='p'>Build and deploy an ML model end-to-end: data generation → data security cleaning → train → real-time API → CI/CD → production deploy.</p>
+</section>
+
+<section id='windows-prerequisites' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>Windows prerequisites</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='windows-prerequisites-win' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <ul class='list'>
+    <li><strong>Windows 10/11</strong>, 64-bit.</li>
+    <li><strong>Python 3.10+</strong> from <a href="https://www.python.org/downloads/windows/" target="_blank" rel="noopener">python.org</a> — enable <em>Add python.exe to PATH</em> (or use the <code>py</code> launcher).</li>
+    <li><strong>Git for Windows</strong> (includes <strong>Git Bash</strong>) for running <code>scripts/*.sh</code>.</li>
+    <li><strong>Docker Desktop</strong> with the <strong>WSL 2</strong> or Hyper-V backend; start Docker before build/deploy steps.</li>
+  </ul>
+  <div class='callout'>If PowerShell blocks <code>Activate.ps1</code>, run once: <code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code></div>
+</section>
+
+<section id='0-setup-host' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>0) Setup (host)</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='0-setup-host-win' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <p class='p'>In <strong>PowerShell</strong>, go to your clone folder (name matches your clone, e.g. <code>mlops-student-workshop</code>):</p>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>PowerShell</div>
+  <button class='copyBtn' type='button' data-copy-target='code_win_setup_ps'>Copy</button>
+</div>
+<pre id='code_win_setup_ps'>cd &quot;C:\path\to\mlops-student-workshop&quot;
+py -3 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -U pip
+pip install -r requirements.txt</pre>
+</div>
+  <p class='p'><strong>Git Bash alternative</strong> (same as Linux handout paths use <code>/</code>):</p>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>Git Bash</div>
+  <button class='copyBtn' type='button' data-copy-target='code_win_setup_bash'>Copy</button>
+</div>
+<pre id='code_win_setup_bash'>cd &quot;/c/path/to/mlops-student-workshop&quot;
+python3 -m venv .venv
+source .venv/Scripts/activate
+pip install -U pip
+pip install -r requirements.txt</pre>
+</div>
+</section>
+
+<section id='1-generate-synthetic-data' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>1) Generate synthetic data</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='1-generate-synthetic-data-win' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <p class='p'>With the venv activated (PowerShell or Git Bash):</p>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>shell</div>
+  <button class='copyBtn' type='button' data-copy-target='code_win_g1'>Copy</button>
+</div>
+<pre id='code_win_g1'>python scripts/generate_synthetic_data.py --rows 5000 --seed 42 --out data/raw.csv</pre>
+</div>
+  <p class='p'>Data security note:</p>
+  <ul class='list'><li><code>data/raw.csv</code> contains PII columns: <code>email</code>, <code>phone</code>, <code>customer_id</code>.</li></ul>
+</section>
+
+<section id='2-data-cleaning-data-security' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>2) Data cleaning + data security</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='2-data-cleaning-data-security-win' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>shell</div>
+  <button class='copyBtn' type='button' data-copy-target='code_win_g2'>Copy</button>
+</div>
+<pre id='code_win_g2'>python src/data_prep.py --input data/raw.csv --output data/clean.csv</pre>
+</div>
+  <p class='p'>Expected outcome:</p>
+  <ul class='list'><li><code>src/data_prep.py</code> drops PII columns before training.</li></ul>
+</section>
+
+<section id='3-train-model-create-artifacts' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>3) Train model + create artifacts</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='3-train-model-create-artifacts-win' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <p class='p'><strong>PowerShell</strong> — clear previous artifacts, then train:</p>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>PowerShell</div>
+  <button class='copyBtn' type='button' data-copy-target='code_win_train_ps'>Copy</button>
+</div>
+<pre id='code_win_train_ps'>if (Test-Path artifacts) { Remove-Item -Recurse -Force artifacts\* }
+python src/train.py --train data/clean.csv --out artifacts --seed 42</pre>
+</div>
+  <p class='p'><strong>Git Bash</strong>:</p>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>Git Bash</div>
+  <button class='copyBtn' type='button' data-copy-target='code_win_train_bash'>Copy</button>
+</div>
+<pre id='code_win_train_bash'>rm -rf artifacts/*
+python src/train.py --train data/clean.csv --out artifacts --seed 42</pre>
+</div>
+  <p class='p'>You should see:</p>
+  <ul class='list'><li><code>artifacts/model.joblib</code></li><li><code>artifacts/metrics.json</code></li><li><code>artifacts/metadata.json</code></li></ul>
+</section>
+
+<section id='4-deploy-to-local-production-container' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>4) Deploy to local “production” container</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='4-deploy-to-local-production-container-win' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <p class='p'><strong>Recommended — Git Bash</strong> (runs the provided pipeline script):</p>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>Git Bash</div>
+  <button class='copyBtn' type='button' data-copy-target='code_win_deploy_bash'>Copy</button>
+</div>
+<pre id='code_win_deploy_bash'>./scripts/pipeline_local_deploy.sh</pre>
+</div>
+  <p class='p'><strong>PowerShell</strong> — same end-to-end flow without Bash (Docker must be running):</p>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>PowerShell</div>
+  <button class='copyBtn' type='button' data-copy-target='code_win_deploy_ps'>Copy</button>
+</div>
+<pre id='code_win_deploy_ps'>python scripts/generate_synthetic_data.py --rows 5000 --seed 42 --out data/raw.csv
+python src/data_prep.py --input data/raw.csv --output data/clean.csv
+if (Test-Path artifacts) { Remove-Item -Recurse -Force artifacts\* }
+python src/train.py --train data/clean.csv --out artifacts --seed 42
+$tag = &quot;mlops-workshop-student:local-$(Get-Date -Format 'yyyyMMdd-HHmmss')&quot;
+docker build -t $tag .
+docker rm -f ml-prod 2&gt;$null; docker run -d --name ml-prod -p 8000:8000 $tag</pre>
+</div>
+  <p class='p'>Verify (use <code>curl.exe</code> on Windows so you don’t hit PowerShell’s <code>curl</code> alias):</p>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>PowerShell / CMD</div>
+  <button class='copyBtn' type='button' data-copy-target='code_win_curl1'>Copy</button>
+</div>
+<pre id='code_win_curl1'>curl.exe -s http://localhost:8000/health
+curl.exe -s http://localhost:8000/version</pre>
+</div>
+</section>
+
+<section id='5-prediction-real-time-demo' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>5) Prediction (real-time demo)</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='5-prediction-real-time-demo-win' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>PowerShell / CMD</div>
+  <button class='copyBtn' type='button' data-copy-target='code_win_predict'>Copy</button>
+</div>
+<pre id='code_win_predict'>curl.exe -s -X POST http://localhost:8000/predict -H "Content-Type: application/json" -d "{\"age\":42,\"country\":\"US\",\"device_type\":\"mobile\",\"transaction_amount\":250.5,\"hour_of_day\":13,\"num_prev_txns\":3,\"is_international\":0}"</pre>
+</div>
+  <p class='p'><strong>Git Bash</strong> — you can use the same JSON as the Linux handout with single quotes around the <code>-d</code> payload.</p>
+</section>
+
+<section id='6-ci-cd-practice-github-copy-simulation' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>6) CI/CD practice (GitHub copy simulation)</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='6-ci-cd-practice-github-copy-simulation-win' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <p class='p'>Run the GitHub-style pipeline locally from <strong>Git Bash</strong>:</p>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>Git Bash</div>
+  <button class='copyBtn' type='button' data-copy-target='code_win_gh1'>Copy</button>
+</div>
+<pre id='code_win_gh1'>chmod +x scripts/github_pipeline_sim.sh
+./scripts/github_pipeline_sim.sh</pre>
+</div>
+  <p class='p'>Then re-check:</p>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>PowerShell / CMD</div>
+  <button class='copyBtn' type='button' data-copy-target='code_win_gh2'>Copy</button>
+</div>
+<pre id='code_win_gh2'>curl.exe -s http://localhost:8000/version</pre>
+</div>
+  <p class='p'>The <code>model_version</code> should change after redeploy.</p>
+  <div class='callout'>If <code>pytest</code> is not found in Git Bash, use <code>python -m pytest -q</code> after activating the venv.</div>
+</section>
+
+<section id='7-jenkins-if-instructor-starts-local-jenkins' class='card' style='scroll-margin-top:18px'>
+  <div class='cardHead'>
+    <div class='cardTitle'>7) Jenkins (if instructor starts local Jenkins)</div>
+    <label class='doneWrap'>
+      <input type='checkbox' class='doneBox' data-sec='7-jenkins-if-instructor-starts-local-jenkins-win' />
+      <span>Completed</span>
+    </label>
+  </div>
+  <p class='p'><strong>Full setup</strong> (start Jenkins, job config, troubleshooting): follow <code>jenkins/README.md</code> in this repo.</p>
+  <p class='p'><strong>Start Jenkins locally (PowerShell)</strong> from repo root:</p>
+  <div class='codeCard'>
+<div class='codeHead'>
+  <div class='codeLang'>PowerShell</div>
+  <button class='copyBtn' type='button' data-copy-target='code_win_jk'>Copy</button>
+</div>
+<pre id='code_win_jk'>cd jenkins
+docker compose -f docker-compose.yml up --build -d</pre>
+</div>
+  <p class='p'><strong>Create the Pipeline job:</strong> Pipeline script from SCM → Git → <code>https://github.com/bridgeneuron-cloud/mlops-student-workshop.git</code> → Branch <code>*/main</code> → Script Path <code>Jenkinsfile</code> → Credentials (Username with password = GitHub username + PAT).</p>
+  <p class='p'><strong>Expected stages (full pipeline):</strong> Setup Python + Dependencies → Generate synthetic data → Data prep → Train → Unit tests → Docker preflight → Build Docker image → Deploy to local production.</p>
+  <p class='p'><strong>If Docker fails in Jenkins:</strong> set <code>SKIP_DOCKER=true</code> on the job to stop after tests. On your Windows host, run the deploy path from section 4 (Git Bash <code>./scripts/pipeline_local_deploy.sh</code> or the PowerShell block).</p>
+  <p class='p'><strong>After deploy:</strong> <code>curl.exe -s http://localhost:8000/health</code> and <code>curl.exe -s http://localhost:8000/version</code>.</p>
+</section>
+      </div>
+    </main>
+  </div>
+
+<script>
+  function filterText(){
+    const q=(document.getElementById('searchBox').value||'').trim().toLowerCase();
+    const cards=document.querySelectorAll('section.card');
+    cards.forEach(card=>{
+      const t=(card.innerText||'').toLowerCase();
+      card.style.display=(!q || t.includes(q)) ? '' : 'none';
+    });
+  }
+
+  document.querySelectorAll('.copyBtn').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id=btn.getAttribute('data-copy-target');
+      const pre=document.getElementById(id);
+      const txt=pre ? pre.innerText : '';
+      try{
+        await navigator.clipboard.writeText(txt);
+        const old=btn.textContent;
+        btn.textContent='Copied';
+        setTimeout(()=>btn.textContent=old, 900);
+      }catch(e){
+        alert('Copy failed. Select and copy manually.');
+      }
+    });
+  });
+
+  const KEY_PREFIX='done_win_';
+  document.querySelectorAll('.doneBox').forEach(cb=>{
+    const sec=cb.getAttribute('data-sec');
+    const saved=localStorage.getItem(KEY_PREFIX+sec);
+    if(saved==='1') cb.checked=true;
+    cb.addEventListener('change', ()=>{
+      localStorage.setItem(KEY_PREFIX+sec, cb.checked ? '1' : '0');
+    });
+  });
+</script>
+</body></html>

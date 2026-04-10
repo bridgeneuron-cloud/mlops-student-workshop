@@ -21,7 +21,8 @@
 - `.github/workflows/mlops-ci.yml` - GitHub Actions workflow (same stages)
 
 ### Student HTML files (open in a browser)
-- `STUDENT_HANDOUT.html` (lab steps)
+- `STUDENT_HANDOUT.html` (lab steps — Linux / macOS)
+- `STUDENT_HANDOUT_WINDOWS.html` (same lab — **Windows**: PowerShell, Git Bash, `curl.exe`, Docker Desktop)
 
 Instructor-only rehearsal script is not included in this student repo.
 
