@@ -35,3 +35,12 @@ Expected behavior:
 - If Jenkins asks for initial admin password, follow the logs printed in the terminal where you started compose.
 - First run may take longer because Jenkins container needs to download base layers.
 
+### If "Pipeline" is not visible in New Item
+- Cause: Jenkins started without Pipeline plugins.
+- Fix from `jenkins/` directory:
+```bash
+docker compose -f docker-compose.yml down -v
+docker compose -f docker-compose.yml up --build -d
+```
+- Then refresh `http://localhost:8080` and create a new item again. You should see **Pipeline**.
+

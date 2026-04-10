@@ -10,6 +10,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Allow the Jenkins user to talk to the mounted Docker socket.
 RUN usermod -aG docker jenkins || true
 
+# Preinstall Jenkins plugins required for Pipeline-based workshop jobs.
+COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
+
 # Jenkins runs as 'jenkins' user in the base image.
 USER jenkins
 
